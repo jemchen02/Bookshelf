@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.screens.home
+package com.example.bookshelf.presentation.ui.screens.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,81 +25,66 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelf.R
 import com.example.bookshelf.domain.model.Book
-import com.example.bookshelf.presentation.BookshelfUiState
+import com.example.bookshelf.domain.model.BookPreview
 
 @Composable
-fun HomeScreen(
-    bookshelfUiState: BookshelfUiState,
+fun SearchScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    onSearchChange: (String) -> Unit,
-    onSearchEnter: () -> Unit,
-    onSelectBook: (Book) -> Unit
+    onSelectBook: (String) -> Unit
 ) {
-    Box(modifier = Modifier.padding(contentPadding)) {
-        when (bookshelfUiState) {
-            is BookshelfUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is BookshelfUiState.Success -> BookshelfResultScreen(
-                books = bookshelfUiState.books,
-                bookshelfUiState = bookshelfUiState,
-                onSearchChange = onSearchChange,
-                onSearchEnter = onSearchEnter,
-                onSelectBook = onSelectBook
-            )
-            is BookshelfUiState.Idle -> BookshelfSearchScreen(
-                bookshelfUiState = bookshelfUiState,
-                onSearchChange = onSearchChange,
-                onSearchEnter = onSearchEnter)
-            is BookshelfUiState.Error -> ErrorScreen({ }, modifier = modifier.fillMaxSize())
-        }
+    val searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory)
+    val searchState = searchViewModel.searchState
+
+    Box(modifier = modifier.padding(contentPadding)) {
+        BookshelfResultScreen(
+            searchState = searchState,
+            onSearchChange = { searchViewModel.changeSearchText(it) },
+            onSearchEnter = {searchViewModel.getBooks()},
+            onSelectBook = onSelectBook
+        )
     }
 }
 @Composable
 fun BookshelfResultScreen(
-    books: List<Book>,
-    bookshelfUiState: BookshelfUiState,
+    searchState: SearchState,
     onSearchChange: (String) -> Unit,
     onSearchEnter: () -> Unit,
-    onSelectBook: (Book) -> Unit,
+    onSelectBook: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column {
-        SearchBar(bookshelfUiState = bookshelfUiState, onSearchChange = onSearchChange, onSearchEnter = onSearchEnter)
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(200.dp),
-            modifier = modifier.padding(horizontal = 4.dp),
-        ) {
-            items(items = books, key = { book -> book.id }) {
-                book -> BookCard(
-                    book,
-                    modifier = Modifier.clickable { onSelectBook(book) }
-                )
+        SearchBar(searchState = searchState, onSearchChange = onSearchChange, onSearchEnter = onSearchEnter)
+        searchState.searchResults?.let {books->
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(200.dp),
+                modifier = modifier.padding(horizontal = 4.dp),
+            ) {
+                items(items = books) {
+                    book -> BookCard(
+                        book,
+                        modifier = Modifier.clickable { onSelectBook(book.id) }
+                    )
+                }
             }
         }
     }
 }
-@Composable
-fun BookshelfSearchScreen(
-    bookshelfUiState: BookshelfUiState,
-    onSearchChange: (String) -> Unit,
-    onSearchEnter: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    SearchBar(bookshelfUiState = bookshelfUiState, onSearchChange = onSearchChange, onSearchEnter = onSearchEnter)
-}
+
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    bookshelfUiState: BookshelfUiState,
+    searchState: SearchState,
     onSearchEnter: () -> Unit,
     onSearchChange: (String) -> Unit
 ) {
     TextField(
-        value = bookshelfUiState.searchText,
+        value = searchState.searchText,
         onValueChange = onSearchChange,
         modifier = Modifier
             .fillMaxWidth()
@@ -119,23 +104,28 @@ fun SearchBar(
     )
 }
 @Composable
-fun BookCard(book: Book, modifier: Modifier = Modifier) {
+fun BookCard(book: BookPreview, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.padding(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(book.thumbnail)
-                .crossfade(true)
-                .build(),
-            contentScale = ContentScale.Crop,
-            contentDescription = book.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(0.7f)
-                .padding(4.dp)
-        )
+        if(book.thumbnail != null) {
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(book.thumbnail)
+                    .crossfade(true)
+                    .build(),
+                contentScale = ContentScale.Crop,
+                contentDescription = book.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(0.7f)
+                    .padding(4.dp)
+            )
+        }
+        else {
+            Text(text = book.title)
+        }
     }
 }
 
@@ -144,9 +134,6 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     Text("Loading")
 }
 
-/**
- * The home screen displaying error message with re-attempt button.
- */
 @Composable
 fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     Text("Error")

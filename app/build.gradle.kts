@@ -52,7 +52,9 @@ android {
 
 dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.converter.moshi)
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
     implementation(libs.retrofit)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization.json)

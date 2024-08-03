@@ -1,30 +1,26 @@
 package com.example.bookshelf.data.remote
 
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.JsonClass
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class SearchResultDto(
-    val items: List<SearchItemDto> = emptyList()
+    val items: List<SearchItemDto>
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class SearchItemDto(
     val id: String,
     val volumeInfo: VolumeInfoDto
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class VolumeInfoDto(
-    val title: String,
-    val authors: List<String> = emptyList(),
-    val publishedDate: String = "",
-    val description: String = "",
-    val categories: List<String> = emptyList(),
-    val imageLinks: ImageLinksDto = ImageLinksDto()
+    val title: String?,
+    val imageLinks: ImageLinksDto?
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class ImageLinksDto(
-    val smallThumbnail: String = "",
-    val thumbnail: String = ""
+    val smallThumbnail: String?,
+    val thumbnail: String?
 )

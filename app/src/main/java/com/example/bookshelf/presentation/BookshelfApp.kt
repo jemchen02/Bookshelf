@@ -1,6 +1,7 @@
 package com.example.bookshelf.presentation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,7 +25,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bookshelf.R
 import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailScreen
-import com.example.bookshelf.presentation.ui.screens.home.HomeScreen
+import com.example.bookshelf.presentation.ui.screens.search.SearchViewModel
+import com.example.bookshelf.presentation.ui.screens.search.SearchScreen
 
 enum class BookshelfContentType {
     SingleColumn, DoubleColumn
@@ -35,18 +37,9 @@ enum class BookshelfAppScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookshelfApp(windowSize: WindowWidthSizeClass) {
-    val bookshelfViewModel : BookshelfViewModel = viewModel(factory = BookshelfViewModel.Factory)
-    val uiState = bookshelfViewModel.bookshelfUiState
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val navController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = BookshelfAppScreen.valueOf(
-        backStackEntry?.destination?.route ?: BookshelfAppScreen.Start.name
-    )
-    val currTitle = when(currentScreen) {
-        BookshelfAppScreen.Start -> stringResource(R.string.app_name)
-        BookshelfAppScreen.Book -> uiState.selectedBook?.title ?: stringResource(R.string.book)
-    }
+    val currTitle = stringResource(R.string.app_name)
     val contentType = when(windowSize) {
         WindowWidthSizeClass.Compact ->
             BookshelfContentType.SingleColumn
@@ -73,20 +66,15 @@ fun BookshelfApp(windowSize: WindowWidthSizeClass) {
             startDestination = BookshelfAppScreen.Start.name
         ) {
             composable(BookshelfAppScreen.Start.name) {
-                HomeScreen(
-                    bookshelfUiState = bookshelfViewModel.bookshelfUiState,
+                SearchScreen(
                     contentPadding = innerPadding,
-                    onSearchChange = {bookshelfViewModel.changeSearchText(it)},
-                    onSearchEnter = {bookshelfViewModel.getBooks()},
                     onSelectBook = {
-                        bookshelfViewModel.selectBook(it)
                         navController.navigate(BookshelfAppScreen.Book.name)
                     }
                 )
             }
             composable(BookshelfAppScreen.Book.name) {
                 BookDetailScreen(
-                    book = bookshelfViewModel.bookshelfUiState.selectedBook,
                     contentPadding = innerPadding,
                     contentType = contentType
                 )
@@ -115,7 +103,7 @@ fun BookshelfTopAppBar(
             if(canNavigateBack){
                 IconButton(onClick = navigateUp) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button)
                     )
 

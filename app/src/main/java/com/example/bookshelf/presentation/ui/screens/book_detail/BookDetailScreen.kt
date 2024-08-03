@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelf.presentation.BookshelfContentType
@@ -26,87 +27,35 @@ import com.example.bookshelf.domain.model.Book
 
 @Composable
 fun BookDetailScreen(
-    book: Book?,
     contentPadding: PaddingValues,
     contentType: BookshelfContentType,
     modifier: Modifier = Modifier
 ) {
-    if(book != null) {
-        if(contentType == BookshelfContentType.SingleColumn) {
-            BookDetailSingleColumn(modifier, contentPadding, book)
-        } else {
-            BookDetailDoubleColumn(modifier, contentPadding, book)
-        }
-
+    val bookDetailViewModel: BookDetailViewModel = viewModel(factory = BookDetailViewModel.Factory)
+    val bookDetailState = bookDetailViewModel.bookState
+    if(contentType == BookshelfContentType.SingleColumn) {
+        BookDetailSingleColumn(modifier, contentPadding, bookDetailState)
     } else {
-        Text(text = stringResource(R.string.select_book))
+        BookDetailDoubleColumn(modifier, contentPadding, bookDetailState)
     }
+
 }
 
 @Composable
 private fun BookDetailSingleColumn(
     modifier: Modifier,
     contentPadding: PaddingValues,
-    book: Book
+    bookDetailState: BookDetailState
 ) {
-    Column(
-        modifier = modifier
-            .padding(contentPadding)
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            "Author(s): ${book.authors.joinToString(", ")}",
-            style = MaterialTheme.typography.titleMedium
-        )
-        Text(
-            "Published ${book.publishedDate}",
-            style = MaterialTheme.typography.titleMedium
-        )
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(book.thumbnail)
-                .crossfade(true)
-                .build(),
-            contentDescription = stringResource(R.string.book_image),
-            modifier = Modifier
-                .padding(horizontal = 32.dp, vertical = 16.dp)
-                .height(300.dp)
-        )
-        BookDescription(book)
-    }
-}
-@Composable
-private fun BookDetailDoubleColumn(
-    modifier: Modifier,
-    contentPadding: PaddingValues,
-    book: Book
-) {
-    Row (modifier = modifier.padding(contentPadding)){
+    bookDetailState.book?.let {book ->
         Column(
-            modifier = Modifier
+            modifier = modifier
+                .padding(contentPadding)
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
-                .fillMaxSize()
-                .weight(1f),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(book.thumbnail)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = stringResource(R.string.book_image),
-                modifier = Modifier
-                    .padding(horizontal = 32.dp, vertical = 16.dp)
-                    .sizeIn(
-                        maxWidth = 400.dp,  // Maximum width constraint
-                        maxHeight = 400.dp  // Maximum height constraint
-                    )
-                    .fillMaxSize()
-            )
             Text(
                 "Author(s): ${book.authors.joinToString(", ")}",
                 style = MaterialTheme.typography.titleMedium
@@ -115,14 +64,67 @@ private fun BookDetailDoubleColumn(
                 "Published ${book.publishedDate}",
                 style = MaterialTheme.typography.titleMedium
             )
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(book.thumbnail)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = stringResource(R.string.book_image),
+                modifier = Modifier
+                    .padding(horizontal = 32.dp, vertical = 16.dp)
+                    .height(300.dp)
+            )
+            BookDescription(book)
         }
-        BookDescription(
-            book,
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
-        )
+    }
+}
+@Composable
+private fun BookDetailDoubleColumn(
+    modifier: Modifier,
+    contentPadding: PaddingValues,
+    bookDetailState: BookDetailState
+) {
+    bookDetailState.book?.let { book->
+        Row (modifier = modifier.padding(contentPadding)){
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxSize()
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(book.thumbnail)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = stringResource(R.string.book_image),
+                    modifier = Modifier
+                        .padding(horizontal = 32.dp, vertical = 16.dp)
+                        .sizeIn(
+                            maxWidth = 400.dp,  // Maximum width constraint
+                            maxHeight = 400.dp  // Maximum height constraint
+                        )
+                        .fillMaxSize()
+                )
+                Text(
+                    "Author(s): ${book.authors.joinToString(", ")}",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    "Published ${book.publishedDate}",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            BookDescription(
+                book,
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
+            )
+        }
     }
 }
 
