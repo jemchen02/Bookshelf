@@ -1,5 +1,7 @@
 package com.example.bookshelf.presentation.ui.screens.search
 
+import android.graphics.Color
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -24,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -130,11 +134,18 @@ fun BookCard(book: BookPreview, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LoadingScreen(modifier: Modifier = Modifier) {
-    Text("Loading")
-}
-
-@Composable
-fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
-    Text("Error")
+@Preview
+fun ImageExample() {
+    AsyncImage(
+        model = ImageRequest.Builder(context = LocalContext.current)
+            .data("http://books.google.com/books/content?id=C1MI_4nZyD4C&printsec=frontcover&img=1&zoom=2&edge=curl&imgtk=AFLRE711lo_9uRUxTAjsPI5hHZDHTPT5xtQtCnV-gmg8-JK0aV-elupioXwbvHKmOpjFPMYCGpRxtkZnuV6zJrdXJH9m55CuxfgPiOU7vU69n4VDwdKRunf0p3QFwkuvCHUn0LPwsXXc&source=gbs_api")
+            .crossfade(true)
+            .build(),
+        contentScale = ContentScale.Crop,
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.7f)
+            .padding(4.dp)
+    )
 }
