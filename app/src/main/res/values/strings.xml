@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Bookshelf</string>
+    <string name="search">Search</string>
+    <string name="search_placeholder">Enter a book name</string>
+    <string name="search_icon">search icon</string>
+    <string name="book_image">Book image</string>
+    <string name="back_button">back button</string>
+    <string name="book">Book</string>
+    <string name="select_book">Select a book</string>
+</resources>
