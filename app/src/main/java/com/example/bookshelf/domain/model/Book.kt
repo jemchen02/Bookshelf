@@ -1,9 +1,8 @@
 package com.example.bookshelf.domain.model
 
-import com.example.bookshelf.data.remote.ImageLinksDto
-
 data class Book(
     val id: String,
+    val selfLink: String,
     val title: String,
     val authors: List<String>,
     val publisher: String,

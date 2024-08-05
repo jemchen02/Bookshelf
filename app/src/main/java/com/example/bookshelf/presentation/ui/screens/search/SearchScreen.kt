@@ -18,12 +18,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -33,6 +38,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelf.R
+import com.example.bookshelf.data.local.favorite.Favorite
+import com.example.bookshelf.data.local.mappers.toBookPreview
 import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.domain.model.BookPreview
 
@@ -44,19 +51,25 @@ fun SearchScreen(
 ) {
     val searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory)
     val searchState = searchViewModel.searchState
-
+    val favorites = searchViewModel.getAllFavorites().collectAsState(emptyList()).value
+    val favoriteBooks = favorites.map {
+        it.toBookPreview()
+    }
     Box(modifier = modifier.padding(contentPadding)) {
         BookshelfResultScreen(
             searchState = searchState,
+            favorites = favoriteBooks,
             onSearchChange = { searchViewModel.changeSearchText(it) },
             onSearchEnter = {searchViewModel.getBooks()},
             onSelectBook = onSelectBook
         )
     }
+
 }
 @Composable
 fun BookshelfResultScreen(
     searchState: SearchState,
+    favorites: List<BookPreview>,
     onSearchChange: (String) -> Unit,
     onSearchEnter: () -> Unit,
     onSelectBook: (String) -> Unit,
@@ -65,17 +78,22 @@ fun BookshelfResultScreen(
     Column {
         SearchBar(searchState = searchState, onSearchChange = onSearchChange, onSearchEnter = onSearchEnter)
         searchState.searchResults?.let {books->
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(200.dp),
-                modifier = modifier.padding(horizontal = 4.dp),
-            ) {
-                items(items = books) {
-                    book -> BookCard(
-                        book,
-                        modifier = Modifier.clickable { onSelectBook(book.id) }
-                    )
-                }
-            }
+            BookGrid(
+                books = books,
+                onSelectBook = onSelectBook
+            )
+        } ?: Column {
+            Text(
+                text = "Favorites",
+                style = MaterialTheme.typography.headlineSmall
+            )
+            BookGrid(
+                books = favorites,
+                onSelectBook = onSelectBook
+            )
+        }
+        if(searchState.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     }
 }
@@ -92,7 +110,8 @@ fun SearchBar(
         onValueChange = onSearchChange,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clip(RoundedCornerShape(50)),
         label = { Text(text = stringResource(R.string.search))},
         placeholder = {Text(text = stringResource(R.string.search_placeholder))},
         trailingIcon = {

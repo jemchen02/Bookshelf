@@ -1,11 +1,12 @@
-package com.example.bookshelf.data.remote
+package com.example.bookshelf.data.remote.dtos
 
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class BookSearchDto(
     val id: String,
-    val bookVolumeInfoDto: BookVolumeInfoDto
+    val selfLink: String,
+    val volumeInfo: BookVolumeInfoDto
 )
 
 @JsonClass(generateAdapter = true)
@@ -17,5 +18,5 @@ data class BookVolumeInfoDto(
     val description: String?,
     val pageCount: Int?,
     val categories: List<String>?,
-    val imageLinksDto: ImageLinksDto?
+    val imageLinks: ImageLinksDto?
 )

@@ -1,5 +1,6 @@
 package com.example.bookshelf.presentation.ui.screens.book_detail
 
+import android.text.Html
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,27 +20,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelf.presentation.BookshelfContentType
 import com.example.bookshelf.R
 import com.example.bookshelf.domain.model.Book
+import com.google.android.material.textview.MaterialTextView
 
 @Composable
 fun BookDetailScreen(
+    bookDetailViewModel: BookDetailViewModel,
     contentPadding: PaddingValues,
     contentType: BookshelfContentType,
     modifier: Modifier = Modifier
 ) {
-    val bookDetailViewModel: BookDetailViewModel = viewModel(factory = BookDetailViewModel.Factory)
     val bookDetailState = bookDetailViewModel.bookState
     if(contentType == BookshelfContentType.SingleColumn) {
         BookDetailSingleColumn(modifier, contentPadding, bookDetailState)
     } else {
         BookDetailDoubleColumn(modifier, contentPadding, bookDetailState)
     }
-
+    if(bookDetailViewModel.bookState.isLoading) {
+        CircularProgressIndicator()
+    }
 }
 
 @Composable
@@ -56,6 +64,10 @@ private fun BookDetailSingleColumn(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                book.title,
+                style = MaterialTheme.typography.titleLarge
+            )
             Text(
                 "Author(s): ${book.authors.joinToString(", ")}",
                 style = MaterialTheme.typography.titleMedium
@@ -94,6 +106,10 @@ private fun BookDetailDoubleColumn(
                     .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text(
+                    book.title,
+                    style = MaterialTheme.typography.titleLarge
+                )
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
                         .data(book.thumbnail)
@@ -130,10 +146,14 @@ private fun BookDetailDoubleColumn(
 
 @Composable
 private fun BookDescription(book: Book, modifier: Modifier = Modifier) {
+    val spannedText = HtmlCompat.fromHtml(book.description, 0)
     Box(modifier = modifier) {
-        Text(
-            book.description,
-            style = MaterialTheme.typography.headlineSmall
+        AndroidView(
+            factory = { MaterialTextView(it) },
+            update = {
+                it.text = spannedText
+                it.textSize = 20f
+            }
         )
     }
 }

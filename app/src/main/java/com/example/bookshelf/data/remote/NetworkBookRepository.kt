@@ -1,9 +1,7 @@
-package com.example.bookshelf.data.repository
+package com.example.bookshelf.data.remote
 
-import android.util.Log
-import com.example.bookshelf.data.mappers.toBook
-import com.example.bookshelf.data.mappers.toBookPreviewList
-import com.example.bookshelf.data.remote.BookApiService
+import com.example.bookshelf.data.remote.mappers.toBook
+import com.example.bookshelf.data.remote.mappers.toBookPreviewList
 import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.domain.model.BookPreview
 import com.example.bookshelf.domain.repository.BookRepository
