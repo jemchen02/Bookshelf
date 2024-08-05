@@ -1,4 +1,4 @@
-package com.example.bookshelf.data.remote.dtos
+package com.example.bookshelf.data.remote.response
 
 import com.squareup.moshi.JsonClass
 

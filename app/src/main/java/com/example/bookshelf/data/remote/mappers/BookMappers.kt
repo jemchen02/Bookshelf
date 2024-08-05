@@ -1,7 +1,7 @@
 package com.example.bookshelf.data.remote.mappers
 
-import com.example.bookshelf.data.remote.dtos.BookSearchDto
-import com.example.bookshelf.data.remote.dtos.SearchResultDto
+import com.example.bookshelf.data.remote.response.BookSearchDto
+import com.example.bookshelf.data.remote.response.SearchResultDto
 import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.domain.model.BookPreview
 

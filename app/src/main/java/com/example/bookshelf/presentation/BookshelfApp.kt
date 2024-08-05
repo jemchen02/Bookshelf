@@ -1,5 +1,6 @@
 package com.example.bookshelf.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.bookshelf.BuildConfig
 import com.example.bookshelf.R
 import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.presentation.ui.components.BookshelfTopAppBar
