@@ -1,23 +1,28 @@
 package com.example.bookshelf.di
 
-import com.example.bookshelf.data.repository.NetworkBookRepository
+import android.content.Context
+import com.example.bookshelf.data.local.BookDatabase
+import com.example.bookshelf.data.local.OfflineFavoriteRepository
+import com.example.bookshelf.data.remote.NetworkBookRepository
 import com.example.bookshelf.data.remote.BookApiService
 import com.example.bookshelf.domain.repository.BookRepository
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
+import com.example.bookshelf.domain.repository.FavoriteRepository
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 interface AppContainer {
     val bookRepository: BookRepository
+    val favoriteRepository: FavoriteRepository
 }
-class DefaultAppContainer: AppContainer {
+class DefaultAppContainer(context: Context): AppContainer {
     private val baseUrl = "https://www.googleapis.com/books/v1/"
-    private val json = Json {
-        ignoreUnknownKeys = true
-    }
+    private val moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
     private val retrofit: Retrofit = Retrofit.Builder()
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(baseUrl)
         .build()
     private val retrofitService: BookApiService by lazy {
@@ -25,5 +30,9 @@ class DefaultAppContainer: AppContainer {
     }
     override val bookRepository: BookRepository by lazy {
         NetworkBookRepository(retrofitService)
+    }
+    override val favoriteRepository: FavoriteRepository by lazy {
+        val bookDatabase = BookDatabase.getDatabase(context)
+        OfflineFavoriteRepository(bookDatabase.favoriteDao())
     }
 }
