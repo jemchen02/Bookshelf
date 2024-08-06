@@ -6,8 +6,9 @@ import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.domain.model.BookPreview
 import com.example.bookshelf.domain.repository.BookRepository
 import com.example.bookshelf.domain.util.Resource
+import javax.inject.Inject
 
-class NetworkBookRepository(
+class NetworkBookRepository @Inject constructor(
     private val bookApiService: BookApiService
 ): BookRepository {
     override suspend fun getBooks(query: String): Resource<List<BookPreview>> {

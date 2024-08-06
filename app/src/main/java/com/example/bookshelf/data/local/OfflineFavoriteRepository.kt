@@ -8,8 +8,9 @@ import com.example.bookshelf.domain.model.BookPreview
 import com.example.bookshelf.domain.repository.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class OfflineFavoriteRepository(
+class OfflineFavoriteRepository @Inject constructor(
     private val favoriteDao: FavoriteDao
 ): FavoriteRepository {
     override fun getAllFavoritesStream(): Flow<List<Favorite>> =

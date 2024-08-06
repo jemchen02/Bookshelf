@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -42,6 +43,7 @@ import com.example.bookshelf.data.local.favorite.Favorite
 import com.example.bookshelf.data.local.mappers.toBookPreview
 import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.domain.model.BookPreview
+import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailViewModel
 
 @Composable
 fun SearchScreen(
@@ -49,7 +51,7 @@ fun SearchScreen(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onSelectBook: (String) -> Unit
 ) {
-    val searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory)
+    val searchViewModel = hiltViewModel<SearchViewModel>()
     val searchState = searchViewModel.searchState
     val favorites = searchViewModel.getAllFavorites().collectAsState(emptyList()).value
     val favoriteBooks = favorites.map {

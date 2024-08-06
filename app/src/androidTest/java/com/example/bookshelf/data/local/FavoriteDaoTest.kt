@@ -19,6 +19,11 @@ import org.junit.runner.RunWith
 class FavoriteDaoTest {
     private lateinit var database: BookDatabase
     private lateinit var dao: FavoriteDao
+    private val favorite = Favorite(
+        "aaa",
+        "Triple A",
+        "aaa.url"
+    )
     @Before
     fun setup() {
         database = Room.inMemoryDatabaseBuilder(
@@ -33,22 +38,12 @@ class FavoriteDaoTest {
     }
     @Test
     fun insertFavorite_databaseContains() = runTest {
-        val favorite = Favorite(
-            "aaa",
-            "Triple A",
-            "aaa.url"
-        )
         dao.addFavorite(favorite)
         val allFavorites = dao.getAllFavorites().first()
         assertThat(allFavorites).contains(favorite)
     }
     @Test
     fun deleteFavorite_databaseDoesNotContain() = runTest {
-        val favorite = Favorite(
-            "aaa",
-            "Triple A",
-            "aaa.url"
-        )
         dao.addFavorite(favorite)
         dao.deleteFavorite(favorite.id)
         val allFavorites = dao.getAllFavorites().first()
@@ -56,22 +51,12 @@ class FavoriteDaoTest {
     }
     @Test
     fun addFavoriteIsFavorite_returnsTrue() = runTest {
-        val favorite = Favorite(
-            "aaa",
-            "Triple A",
-            "aaa.url"
-        )
         dao.addFavorite(favorite)
         val isFavorite = dao.isFavorite(favorite.id).first()
         assertThat(isFavorite).isTrue()
     }
     @Test
     fun isNotFavorite_returnsFalse() = runTest {
-        val favorite = Favorite(
-            "aaa",
-            "Triple A",
-            "aaa.url"
-        )
         val isFavorite = dao.isFavorite(favorite.id).first()
         assertThat(isFavorite).isFalse()
     }
