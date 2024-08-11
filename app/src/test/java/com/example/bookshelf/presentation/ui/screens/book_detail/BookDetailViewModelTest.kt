@@ -10,6 +10,8 @@ import com.example.bookshelf.data.repository.FakeBookRepository
 import com.example.bookshelf.data.repository.FakeFavoriteRepository
 import com.example.bookshelf.data.source.FakeBookData.bookItem
 import com.example.bookshelf.domain.model.Book
+import com.example.bookshelf.presentation.ui.common.book_detail.BookDetailState
+import com.example.bookshelf.presentation.ui.common.book_detail.BookDetailViewModel
 import com.example.bookshelf.util.MainCoroutineExtension
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

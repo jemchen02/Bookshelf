@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.screens.book_detail.components
+package com.example.bookshelf.presentation.ui.common.book_detail.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star

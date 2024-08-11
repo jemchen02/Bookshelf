@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.screens.book_detail
+package com.example.bookshelf.presentation.ui.common.book_detail
 
 import com.example.bookshelf.domain.model.Book
 

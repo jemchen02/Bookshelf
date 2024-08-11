@@ -1,6 +1,8 @@
 package com.example.bookshelf.presentation.ui.search
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -17,15 +19,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.bookshelf.R
 import com.example.bookshelf.presentation.ui.BookshelfContentType
-import com.example.bookshelf.presentation.ui.BookshelfViewModel
-import com.example.bookshelf.presentation.ui.components.scaffold.BookshelfTopAppBar
-import com.example.bookshelf.presentation.ui.components.scaffold.NavigationBottomBar
-import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailScreen
-import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailViewModel
-import com.example.bookshelf.presentation.ui.screens.book_detail.components.BookDetailActions
+import com.example.bookshelf.presentation.ui.common.components.scaffold.BookshelfTopAppBar
+import com.example.bookshelf.presentation.ui.common.components.scaffold.BookshelfNavigationBottomBar
+import com.example.bookshelf.presentation.ui.common.book_detail.BookDetailScreen
+import com.example.bookshelf.presentation.ui.common.book_detail.BookDetailViewModel
+import com.example.bookshelf.presentation.ui.common.book_detail.components.BookDetailActions
+import com.example.bookshelf.presentation.ui.common.components.scaffold.BookshelfNavigationRail
 import com.example.bookshelf.presentation.ui.search.screens.home.SearchScreen
 import com.example.bookshelf.presentation.ui.util.TabType
 
@@ -73,34 +74,45 @@ fun SearchTab(
             }
         },
         bottomBar = {
-            NavigationBottomBar(
-                onTabPress = onTabPress,
-                currentTab = TabType.Search
-            )
+            if(windowSize == WindowWidthSizeClass.Compact) {
+                BookshelfNavigationBottomBar(
+                    onTabPress = onTabPress,
+                    currentTab = TabType.Search
+                )
+            }
         },
         containerColor = Color(0XFFFAF0E6)
     ){innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = SearchScreens.Start.name
-        ) {
-            composable(SearchScreens.Start.name) {
-                SearchScreen(
-                    contentPadding = innerPadding,
-                    onSelectBook = { bookId ->
-                        bookDetailViewModel.getBook(bookId)
-                        navController.navigate(SearchScreens.Book.name)
-                    }
+        Row (
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
+        ){
+            if(windowSize != WindowWidthSizeClass.Compact) {
+                BookshelfNavigationRail(
+                    onTabPress = onTabPress,
+                    currentTab = TabType.Search
                 )
             }
-            composable(
-                route = SearchScreens.Book.name,
+            NavHost(
+                navController = navController,
+                startDestination = SearchScreens.Start.name
             ) {
-                BookDetailScreen(
-                    bookDetailViewModel = bookDetailViewModel,
-                    contentPadding = innerPadding,
-                    contentType = contentType
-                )
+                composable(SearchScreens.Start.name) {
+                    SearchScreen(
+                        onSelectBook = { bookId ->
+                            bookDetailViewModel.getBook(bookId)
+                            navController.navigate(SearchScreens.Book.name)
+                        }
+                    )
+                }
+                composable(
+                    route = SearchScreens.Book.name,
+                ) {
+                    BookDetailScreen(
+                        bookDetailViewModel = bookDetailViewModel,
+                        contentType = contentType
+                    )
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.bookshelf.presentation.ui.components.grid.BookGrid
+import com.example.bookshelf.presentation.ui.common.components.grid.BookGrid
 import com.example.bookshelf.presentation.ui.search.SearchViewModel
 import com.example.bookshelf.presentation.ui.search.screens.home.components.SearchBar
 

@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.components.grid
+package com.example.bookshelf.presentation.ui.common.components.grid
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.components.grid
+package com.example.bookshelf.presentation.ui.common.components.grid
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding

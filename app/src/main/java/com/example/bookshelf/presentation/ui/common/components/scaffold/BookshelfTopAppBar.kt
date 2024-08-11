@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.components.scaffold
+package com.example.bookshelf.presentation.ui.common.components.scaffold
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.screens.book_detail.components
+package com.example.bookshelf.presentation.ui.common.book_detail.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelf.R
-import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailState
+import com.example.bookshelf.presentation.ui.common.book_detail.BookDetailState
 
 @Composable
 fun BookDetailSingleColumn(
