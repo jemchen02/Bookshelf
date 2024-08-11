@@ -4,11 +4,13 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("de.mannodermaus.android-junit5") version "1.9.3.0"
 }
 
 android {
     namespace = "com.example.bookshelf"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "com.example.bookshelf"
@@ -57,6 +59,7 @@ android {
 
 dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
+    testImplementation(libs.junit.junit)
     kapt("com.google.dagger:hilt-compiler:2.51.1")
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
@@ -96,6 +99,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    testImplementation(libs.truth)
-    androidTestImplementation(libs.truth)
+    testImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
+    testImplementation("io.mockk:mockk:1.12.5")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
+    testImplementation("app.cash.turbine:turbine:0.7.0")
+    androidTestImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
+    androidTestImplementation("io.mockk:mockk-android:1.12.5")
+    androidTestImplementation("app.cash.turbine:turbine:0.7.0")
 }

@@ -52,7 +52,7 @@ fun SearchScreen(
     onSelectBook: (String) -> Unit
 ) {
     val searchViewModel = hiltViewModel<SearchViewModel>()
-    val searchState = searchViewModel.searchState
+    val searchState = searchViewModel.searchState.collectAsState().value
     val favorites = searchViewModel.getAllFavorites().collectAsState(emptyList()).value
     val favoriteBooks = favorites.map {
         it.toBookPreview()

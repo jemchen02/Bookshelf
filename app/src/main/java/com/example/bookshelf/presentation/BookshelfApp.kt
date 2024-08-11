@@ -80,7 +80,7 @@ fun BookshelfApp(windowSize: WindowWidthSizeClass) {
             ) {
                 if(currentScreen == BookshelfAppScreen.Book) {
                     BookDetailActions (
-                        isFavorite = bookDetailViewModel.getIsFavorite().collectAsState(initial = false).value,
+                        isFavorite = bookDetailViewModel.bookState.collectAsState().value.isFavorite,
                     ){
                         bookDetailViewModel.toggleFavorite()
                     }

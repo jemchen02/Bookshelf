@@ -5,7 +5,6 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class BookSearchDto(
     val id: String,
-    val selfLink: String,
     val volumeInfo: BookVolumeInfoDto
 )
 

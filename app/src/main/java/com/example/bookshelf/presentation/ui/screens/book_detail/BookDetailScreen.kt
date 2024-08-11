@@ -15,6 +15,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,13 +39,13 @@ fun BookDetailScreen(
     contentType: BookshelfContentType,
     modifier: Modifier = Modifier
 ) {
-    val bookDetailState = bookDetailViewModel.bookState
+    val bookDetailState = bookDetailViewModel.bookState.collectAsState().value
     if(contentType == BookshelfContentType.SingleColumn) {
         BookDetailSingleColumn(modifier, contentPadding, bookDetailState)
     } else {
         BookDetailDoubleColumn(modifier, contentPadding, bookDetailState)
     }
-    if(bookDetailViewModel.bookState.isLoading) {
+    if(bookDetailState.isLoading) {
         CircularProgressIndicator()
     }
 }

@@ -18,7 +18,6 @@ fun SearchResultDto.toBookPreviewList(): List<BookPreview> {
 fun BookSearchDto.toBook(): Book {
     return Book(
         id = id,
-        selfLink = selfLink,
         title = volumeInfo.title,
         authors = volumeInfo.authors ?: emptyList(),
         publisher = volumeInfo.publisher ?: "",

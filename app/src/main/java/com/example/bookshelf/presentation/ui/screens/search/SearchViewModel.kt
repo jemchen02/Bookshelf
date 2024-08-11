@@ -16,6 +16,9 @@ import com.example.bookshelf.domain.util.Resource
 import com.example.bookshelf.BookshelfApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,41 +27,47 @@ class SearchViewModel @Inject constructor(
     private val bookRepository: BookRepository,
     private val favoriteRepository: FavoriteRepository
 ) : ViewModel(){
-    var searchState by mutableStateOf(SearchState())
-        private set
+    private val _searchState = MutableStateFlow(SearchState())
+    val searchState = _searchState.asStateFlow()
 
     fun getAllFavorites(): Flow<List<Favorite>> = favoriteRepository.getAllFavoritesStream()
 
     fun changeSearchText(query: String) {
-        searchState = searchState.copy(
-            searchText = query
-        )
+        _searchState.update {
+            it.copy(searchText = query)
+        }
     }
     fun getBooks() {
-        if(searchState.searchText.isEmpty()) {
-            searchState = SearchState()
+        if(_searchState.value.searchText.isEmpty()) {
+            _searchState.value = SearchState()
         } else {
             viewModelScope.launch {
-                searchState = searchState.copy(
-                    isLoading = true,
-                    error = null
-                )
-                when(val result = bookRepository.getBooks(searchState.searchText)) {
+                _searchState.update {
+                    it.copy(
+                        isLoading = true,
+                        error = null
+                    )
+                }
+                when(val result = bookRepository.getBooks(_searchState.value.searchText)) {
                     is Resource.Success -> {
-                        searchState = searchState.copy(
-                            searchText = "",
-                            searchResults = result.data,
-                            isLoading = false,
-                            error = null
-                        )
+                        _searchState.update{
+                            it.copy(
+                                searchText = "",
+                                searchResults = result.data,
+                                isLoading = false,
+                                error = null
+                            )
+                        }
                     }
                     is Resource.Error -> {
-                        searchState = searchState.copy(
-                            searchText = "",
-                            searchResults = null,
-                            isLoading = false,
-                            error = result.message
-                        )
+                        _searchState.update {
+                            it.copy(
+                                searchText = "",
+                                searchResults = null,
+                                isLoading = false,
+                                error = result.message
+                            )
+                        }
                     }
                 }
             }

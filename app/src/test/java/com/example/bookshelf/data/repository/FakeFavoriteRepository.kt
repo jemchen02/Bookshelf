@@ -2,13 +2,14 @@ package com.example.bookshelf.data.repository
 
 import com.example.bookshelf.data.local.favorite.Favorite
 import com.example.bookshelf.data.local.mappers.toFavorite
+import com.example.bookshelf.data.source.FakeFavoriteData
 import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.domain.repository.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeFavoriteRepository: FavoriteRepository {
-    private val favorites = mutableListOf<Favorite>()
+    private val favorites = FakeFavoriteData.favoriteList.toMutableList()
     override fun getAllFavoritesStream(): Flow<List<Favorite>> {
         return flow { emit(favorites) }
     }

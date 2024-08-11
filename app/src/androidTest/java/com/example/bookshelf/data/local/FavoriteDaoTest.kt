@@ -4,9 +4,13 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.doesNotContain
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import com.example.bookshelf.data.local.favorite.Favorite
 import com.example.bookshelf.data.local.favorite.FavoriteDao
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -15,7 +19,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-@SmallTest
 class FavoriteDaoTest {
     private lateinit var database: BookDatabase
     private lateinit var dao: FavoriteDao
