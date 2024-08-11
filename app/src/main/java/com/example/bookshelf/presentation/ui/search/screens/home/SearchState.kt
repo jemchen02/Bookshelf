@@ -1,4 +1,4 @@
-package com.example.bookshelf.presentation.ui.screens.search
+package com.example.bookshelf.presentation.ui.search.screens.home
 
 import com.example.bookshelf.data.local.favorite.Favorite
 import com.example.bookshelf.domain.model.BookPreview

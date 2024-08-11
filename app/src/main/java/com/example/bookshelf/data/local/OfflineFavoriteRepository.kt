@@ -2,6 +2,7 @@ package com.example.bookshelf.data.local
 
 import com.example.bookshelf.data.local.favorite.Favorite
 import com.example.bookshelf.data.local.favorite.FavoriteDao
+import com.example.bookshelf.data.local.mappers.toBookPreview
 import com.example.bookshelf.data.local.mappers.toFavorite
 import com.example.bookshelf.domain.model.Book
 import com.example.bookshelf.domain.model.BookPreview
@@ -13,9 +14,13 @@ import javax.inject.Inject
 class OfflineFavoriteRepository @Inject constructor(
     private val favoriteDao: FavoriteDao
 ): FavoriteRepository {
-    override fun getAllFavoritesStream(): Flow<List<Favorite>> =
-        favoriteDao.getAllFavorites()
-
+    override fun getAllFavoritesStream(): Flow<List<BookPreview>>  {
+        return favoriteDao.getAllFavorites().map { favorites->
+            favorites.map {
+                it.toBookPreview()
+            }
+        }
+    }
     override fun isFavoriteStream(id: String): Flow<Boolean> =
         favoriteDao.isFavorite(id)
 

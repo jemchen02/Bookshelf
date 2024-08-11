@@ -5,7 +5,7 @@ import com.example.bookshelf.data.remote.response.BookVolumeInfoDto
 import com.example.bookshelf.data.remote.response.SearchItemDto
 import com.example.bookshelf.data.remote.response.VolumeInfoDto
 import com.example.bookshelf.data.source.FakeBookData
-import com.example.bookshelf.presentation.ui.screens.search.SearchState
+import com.example.bookshelf.presentation.ui.search.screens.home.SearchState
 
 fun bookSearchDto(id: String, title: String) = BookSearchDto(
     id = id,

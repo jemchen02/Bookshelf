@@ -3,10 +3,7 @@ package com.example.bookshelf.presentation.ui.screens.search
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.example.bookshelf.data.repository.FakeBookRepository
-import com.example.bookshelf.data.repository.FakeFavoriteRepository
-import com.example.bookshelf.data.source.FakeFavoriteData
 import com.example.bookshelf.util.MainCoroutineExtension
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,17 +12,17 @@ import app.cash.turbine.test
 import assertk.assertions.isEmpty
 import assertk.assertions.isNotNull
 import com.example.bookshelf.data.source.FakeBookData
+import com.example.bookshelf.presentation.ui.search.screens.home.SearchState
+import com.example.bookshelf.presentation.ui.search.SearchViewModel
 
 @ExtendWith(MainCoroutineExtension::class)
 class SearchViewModelTest {
     private lateinit var viewModel: SearchViewModel
     private lateinit var bookRepository: FakeBookRepository
-    private lateinit var favoriteRepository: FakeFavoriteRepository
     @BeforeEach
     fun setUp() {
         bookRepository = FakeBookRepository()
-        favoriteRepository = FakeFavoriteRepository()
-        viewModel = SearchViewModel(bookRepository,favoriteRepository)
+        viewModel = SearchViewModel(bookRepository)
     }
     @Test
     fun `Test edit search text flow`() = runTest{
@@ -64,12 +61,14 @@ class SearchViewModelTest {
             viewModel.getBooks()
             awaitItem()
             val emission4 = awaitItem()
-            assertThat(emission4).isEqualTo(SearchState(
+            assertThat(emission4).isEqualTo(
+                SearchState(
                 searchText = "",
                 searchResults = FakeBookData.bookPreviews,
                 isLoading = false,
                 error = null
-            ))
+            )
+            )
         }
     }
 
@@ -83,18 +82,14 @@ class SearchViewModelTest {
             viewModel.getBooks()
             awaitItem()
             val emission4 = awaitItem()
-            assertThat(emission4).isEqualTo(SearchState(
+            assertThat(emission4).isEqualTo(
+                SearchState(
                 searchText = "",
                 searchResults = null,
                 isLoading = false,
                 error = "Network Error"
-            ))
+            )
+            )
         }
-    }
-
-    @Test
-    fun `Get all favorites returns favorites`() = runTest {
-        val result = viewModel.getAllFavorites().first()
-        assertThat(result).isEqualTo(FakeFavoriteData.favoriteList)
     }
 }

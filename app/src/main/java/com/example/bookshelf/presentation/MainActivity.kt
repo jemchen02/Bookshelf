@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import com.example.bookshelf.presentation.ui.BookshelfApp
 import com.example.bookshelf.presentation.ui.theme.BookshelfTheme
 import dagger.hilt.android.AndroidEntryPoint
 

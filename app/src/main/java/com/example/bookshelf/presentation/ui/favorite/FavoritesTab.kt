@@ -1,20 +1,8 @@
-package com.example.bookshelf.presentation
+package com.example.bookshelf.presentation.ui.favorite
 
-import android.util.Log
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,35 +12,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.example.bookshelf.BuildConfig
 import com.example.bookshelf.R
-import com.example.bookshelf.domain.model.Book
-import com.example.bookshelf.presentation.ui.components.BookshelfTopAppBar
-import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailActions
+import com.example.bookshelf.presentation.ui.BookshelfContentType
+import com.example.bookshelf.presentation.ui.components.scaffold.BookshelfTopAppBar
+import com.example.bookshelf.presentation.ui.components.scaffold.NavigationBottomBar
+import com.example.bookshelf.presentation.ui.favorite.screens.home.FavoritesScreen
 import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailScreen
 import com.example.bookshelf.presentation.ui.screens.book_detail.BookDetailViewModel
-import com.example.bookshelf.presentation.ui.screens.search.SearchViewModel
-import com.example.bookshelf.presentation.ui.screens.search.SearchScreen
+import com.example.bookshelf.presentation.ui.screens.book_detail.components.BookDetailActions
+import com.example.bookshelf.presentation.ui.util.TabType
 
-enum class BookshelfContentType {
-    SingleColumn, DoubleColumn
-}
-enum class BookshelfAppScreen() {
-    Start, Book
-}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookshelfApp(windowSize: WindowWidthSizeClass) {
+fun FavoritesTab(
+    windowSize: WindowWidthSizeClass,
+    navController: NavHostController,
+    onTabPress: (TabType) -> Unit
+) {
     val bookDetailViewModel = hiltViewModel<BookDetailViewModel>()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val navController = rememberNavController()
     val currTitle = stringResource(R.string.app_name)
     val contentType = when(windowSize) {
         WindowWidthSizeClass.Compact ->
@@ -66,8 +50,8 @@ fun BookshelfApp(windowSize: WindowWidthSizeClass) {
     }
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
-    val currentScreen = BookshelfAppScreen.valueOf(
-        backStackEntry?.destination?.route ?: BookshelfAppScreen.Start.name
+    val currentScreen = FavoriteScreens.valueOf(
+        backStackEntry?.destination?.route ?: FavoriteScreens.Favorites.name
     )
     Scaffold (
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -75,10 +59,10 @@ fun BookshelfApp(windowSize: WindowWidthSizeClass) {
             BookshelfTopAppBar(
                 scrollBehavior = scrollBehavior,
                 currTitle = currTitle,
-                canNavigateBack = currentScreen != BookshelfAppScreen.Start,
+                canNavigateBack = currentScreen != FavoriteScreens.Favorites,
                 navigateUp = { navController.navigateUp() },
             ) {
-                if(currentScreen == BookshelfAppScreen.Book) {
+                if(currentScreen == FavoriteScreens.Book) {
                     BookDetailActions (
                         isFavorite = bookDetailViewModel.bookState.collectAsState().value.isFavorite,
                     ){
@@ -87,23 +71,29 @@ fun BookshelfApp(windowSize: WindowWidthSizeClass) {
                 }
             }
         },
+        bottomBar = {
+            NavigationBottomBar(
+                onTabPress = onTabPress,
+                currentTab = TabType.Favorites
+            )
+        },
         containerColor = Color(0XFFFAF0E6)
     ){innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = BookshelfAppScreen.Start.name
+            startDestination = FavoriteScreens.Favorites.name
         ) {
-            composable(BookshelfAppScreen.Start.name) {
-                SearchScreen(
+            composable(FavoriteScreens.Favorites.name) {
+                FavoritesScreen(
                     contentPadding = innerPadding,
-                    onSelectBook = { bookId ->
-                        bookDetailViewModel.getBook(bookId)
-                        navController.navigate(BookshelfAppScreen.Book.name)
+                    onSelectBook = {
+                        bookDetailViewModel.getBook(it)
+                        navController.navigate(FavoriteScreens.Book.name)
                     }
                 )
             }
             composable(
-                route = BookshelfAppScreen.Book.name,
+                route = FavoriteScreens.Book.name,
             ) {
                 BookDetailScreen(
                     bookDetailViewModel = bookDetailViewModel,
