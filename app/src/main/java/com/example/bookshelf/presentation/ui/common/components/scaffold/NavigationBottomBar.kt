@@ -18,7 +18,6 @@ fun BookshelfNavigationBottomBar(
     currentTab: TabType
 ) {
     NavigationBar (
-        containerColor = Color(0XFFFAF0E6)
     ){
         navigationItemList.map {
             NavigationBarItem(

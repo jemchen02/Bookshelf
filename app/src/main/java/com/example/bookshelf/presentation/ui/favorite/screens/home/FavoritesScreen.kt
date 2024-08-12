@@ -25,7 +25,7 @@ fun FavoritesScreen(
             Text(
                 text = "Favorites",
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, top = 12.dp)
             )
             BookGrid(
                 books = favorites,

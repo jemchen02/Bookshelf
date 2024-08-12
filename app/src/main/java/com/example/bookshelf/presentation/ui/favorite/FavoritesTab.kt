@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -77,10 +78,11 @@ fun FavoritesTab(
                 )
             }
         },
-        containerColor = Color(0XFFFAF0E6)
+        containerColor = MaterialTheme.colorScheme.background
     ){innerPadding ->
         Row (
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
         ){
             if(windowSize != WindowWidthSizeClass.Compact) {

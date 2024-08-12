@@ -33,7 +33,7 @@ fun BookshelfTopAppBar(
             Text(
                 text = currTitle,
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color(0xff5e4414)
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         },
         navigationIcon = {
@@ -48,7 +48,7 @@ fun BookshelfTopAppBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0Xffc9b681),
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
             scrolledContainerColor = Color(0Xffc9b681)
         ),
         actions = actions,
