@@ -1,6 +1,7 @@
 package com.example.bookshelf.presentation.ui.common.components.grid
 
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -36,7 +37,13 @@ fun BookCard(book: BookPreview, modifier: Modifier = Modifier) {
             )
         }
         else {
-            Text(text = book.title)
+            Text(
+                text = book.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(0.7f)
+                    .padding(4.dp)
+            )
         }
     }
 }

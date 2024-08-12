@@ -49,7 +49,7 @@ fun BookshelfTopAppBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            scrolledContainerColor = Color(0Xffc9b681)
+            scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         actions = actions,
         modifier = modifier

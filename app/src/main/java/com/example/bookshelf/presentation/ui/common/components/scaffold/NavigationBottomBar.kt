@@ -2,6 +2,7 @@ package com.example.bookshelf.presentation.ui.common.components.scaffold
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
@@ -17,8 +18,7 @@ fun BookshelfNavigationBottomBar(
     onTabPress: (TabType) -> Unit,
     currentTab: TabType
 ) {
-    NavigationBar (
-    ){
+    NavigationBar {
         navigationItemList.map {
             NavigationBarItem(
                 selected = currentTab == it.tabType,

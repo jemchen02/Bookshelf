@@ -3,6 +3,7 @@ package com.example.bookshelf.presentation.ui.common.components.scaffold
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.runtime.Composable
@@ -18,9 +19,7 @@ fun BookshelfNavigationRail(
     onTabPress: (TabType) -> Unit,
     currentTab: TabType
 ) {
-    NavigationRail (
-        containerColor = Color(0XFFFAF0E6)
-    ){
+    NavigationRail {
         navigationItemList.map {
             NavigationRailItem(
                 selected = currentTab == it.tabType,
